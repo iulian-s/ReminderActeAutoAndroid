@@ -50,6 +50,7 @@ fun AuthScreen(){
                     navController = authController,
                     onNavigateToRegister = {authController.navigate(AuthScreenRoutes.Register.route)},
                     onNavigateToForgotPassword = {authController.navigate(AuthScreenRoutes.ForgotPassword.route)},
+                    onContinueOffline = {authController.navigate(AuthScreenRoutes.Dashboard.route)},
                     onLoginSuccess = {
                         isLoggedIn = true
                         authController.navigate(AuthScreenRoutes.Dashboard.route){
@@ -65,11 +66,11 @@ fun AuthScreen(){
             }
 
             composable(AuthScreenRoutes.Dashboard.route){
-                LaunchedEffect(isLoggedIn) {
-                    if(!isLoggedIn){
-                        authController.navigate(AuthScreenRoutes.Login.route)
-                    }
-                }
+//                LaunchedEffect(isLoggedIn) {
+//                    if(!isLoggedIn){
+//                        authController.navigate(AuthScreenRoutes.Login.route)
+//                    }
+//                }
                 DashboardScreen()
             }
         }
