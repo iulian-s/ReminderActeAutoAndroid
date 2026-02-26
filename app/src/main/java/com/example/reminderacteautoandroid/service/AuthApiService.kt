@@ -9,6 +9,16 @@ interface AuthApiService {
         val email: String,
         val password: String
     )
+
+    data class ForgotPasswordRequestDTO(
+        val email: String
+    )
+
+    data class ResetPasswordRequestDTO(
+        val token: String,
+        val newPassword: String
+    )
+
     data class AuthResponse(val token: String)
 
     @POST("/api/auth/login")
@@ -16,4 +26,10 @@ interface AuthApiService {
 
     @POST("/api/auth/register")
     suspend fun register(@Body request: UserRequestDTO): Response<Void>
+
+    @POST("/api/auth/forgot-password")
+    suspend fun forgotPassword(@Body request: ForgotPasswordRequestDTO): Response<Void>
+
+    @POST("/api/auth/reset-password")
+    suspend fun resetPassword(@Body request: ResetPasswordRequestDTO): Response<Void>
 }

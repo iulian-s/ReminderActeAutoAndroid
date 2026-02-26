@@ -23,6 +23,8 @@ sealed class AuthScreenRoutes(val route: String){
     object Register: AuthScreenRoutes("register")
     
     object ForgotPassword: AuthScreenRoutes("forgotPassword")
+
+    object RecoverPassword: AuthScreenRoutes("recoverPassword")
     object Dashboard: AuthScreenRoutes("Dashboard")
 }
 
@@ -50,7 +52,6 @@ fun AuthScreen(){
                     navController = authController,
                     onNavigateToRegister = {authController.navigate(AuthScreenRoutes.Register.route)},
                     onNavigateToForgotPassword = {authController.navigate(AuthScreenRoutes.ForgotPassword.route)},
-                    onContinueOffline = {authController.navigate(AuthScreenRoutes.Dashboard.route)},
                     onLoginSuccess = {
                         isLoggedIn = true
                         authController.navigate(AuthScreenRoutes.Dashboard.route){
@@ -62,16 +63,35 @@ fun AuthScreen(){
             }
 
             composable(AuthScreenRoutes.Register.route){
-                //RegisterScreen()
+                RegisterScreen(
+                    onBack = { authController.popBackStack() },
+                    onRegisterSuccess = {
+                        authController.navigate(AuthScreenRoutes.Login.route)
+                    }
+                )
             }
 
             composable(AuthScreenRoutes.Dashboard.route){
-//                LaunchedEffect(isLoggedIn) {
-//                    if(!isLoggedIn){
-//                        authController.navigate(AuthScreenRoutes.Login.route)
-//                    }
-//                }
+                LaunchedEffect(isLoggedIn) {
+                    if(!isLoggedIn){
+                        authController.navigate(AuthScreenRoutes.Login.route)
+                    }
+                }
                 DashboardScreen()
+            }
+
+            composable(AuthScreenRoutes.ForgotPassword.route){
+                ForgotPasswordScreen(
+                    onBack = { authController.popBackStack() },
+                    onSend = {authController.navigate(AuthScreenRoutes.RecoverPassword.route)}
+                )
+            }
+
+            composable(AuthScreenRoutes.RecoverPassword.route){
+                RecoverPasswordScreen(
+                    onBack = { authController.popBackStack() },
+                    onSuccess = { authController.navigate(AuthScreenRoutes.Login.route)}
+                )
             }
         }
     }

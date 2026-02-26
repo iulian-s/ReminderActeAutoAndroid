@@ -12,8 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import kotlin.getValue
 
-const val BASE_URL = "http://10.0.2.2:8080"
-
+const val BASE_URL = "https://iulian-s-reminderacteauto.hf.space"
+//const val BASE_URL = "http://10.0.2.2:8080"
 object RetrofitClient{
     private var tokenManager: TokenManager? = null
 

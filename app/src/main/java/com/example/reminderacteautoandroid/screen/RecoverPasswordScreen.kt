@@ -11,7 +11,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.reminderacteautoandroid.config.RetrofitClient
 import com.example.reminderacteautoandroid.service.AuthApiService
@@ -37,18 +40,19 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgotPasswordScreen(
+fun RecoverPasswordScreen(
     onBack: () -> Unit,
-    onSend: () -> Unit
+    onSuccess: () -> Unit
 ) {
-    var email by remember{ mutableStateOf("") }
+    var token by remember{ mutableStateOf("") }
+    var newPassword by remember{ mutableStateOf("") }
     val scope = rememberCoroutineScope()
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Recuperare cont") },
+                title = { Text("Schimbare parola cont") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Inapoi")
@@ -65,35 +69,44 @@ fun ForgotPasswordScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Text(
-                text = "Introdu adresa de email utilizata la inregistrare",
+                text = "Introdu codul primit pe mail",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedTextField(
-                value = email,
+                value = token,
+                onValueChange = { newValue -> token = newValue
+                },
+                label = { Text("Cod de verificare") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = newPassword,
                 onValueChange = { newValue ->
-                    if (!newValue.contains("\n") && !newValue.contains("\t") && !newValue.contains(" ")) {
-                        email = newValue
+                    if (!newValue.contains("\n") && !newValue.contains("\t")&& !newValue.contains(" ")) {
+                        newPassword = newValue
                     }
                 },
-                label = { Text("Email") },
-                leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                label = { Text("Parola") },
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
             Spacer(modifier = Modifier.height(32.dp))
-
             Button(
                 onClick = {
                     scope.launch{
-                        val request = AuthApiService.ForgotPasswordRequestDTO(email)
+                        val request = AuthApiService.ResetPasswordRequestDTO(token, newPassword)
                         try {
-                            val response = RetrofitClient.authService.forgotPassword(request)
+                            val response = RetrofitClient.authService.resetPassword(request)
                             if(response.isSuccessful){
-                                onSend()
+                                onSuccess()
                             }
                             else{
                                 errorMessage = "Serverul a intampinat o eroare, te rugam sa incerci mai tarziu!"
@@ -102,9 +115,9 @@ fun ForgotPasswordScreen(
                             e.printStackTrace()
                         }
                     }
-                },
-                modifier = Modifier.fillMaxWidth()) {
-                Text("Trimite")
+                }, enabled = newPassword.isNotBlank(),
+                modifier = Modifier.fillMaxWidth()){
+                Text("Salveaza")
             }
             if (errorMessage != null) {
                 Text(

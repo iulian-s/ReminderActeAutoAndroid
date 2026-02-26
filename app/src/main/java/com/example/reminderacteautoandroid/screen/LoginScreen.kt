@@ -40,8 +40,7 @@ fun LoginScreen(
     onNavigateToRegister: () -> Unit,
     onNavigateToForgotPassword: () -> Unit,
     onLoginSuccess: () -> Unit,
-    navController: NavController,
-    onContinueOffline: () -> Unit
+    navController: NavController
 ){
     val context = LocalContext.current
     val tokenManager = remember { TokenManager(context) }
@@ -135,8 +134,5 @@ fun LoginScreen(
             }
         }
 
-        TextButton(onClick = onContinueOffline, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Text("Continua offline")
-        }
     }
 }
