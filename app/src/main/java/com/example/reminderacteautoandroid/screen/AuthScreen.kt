@@ -1,5 +1,7 @@
 package com.example.reminderacteautoandroid.screen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -28,6 +30,7 @@ sealed class AuthScreenRoutes(val route: String){
     object Dashboard: AuthScreenRoutes("Dashboard")
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AuthScreen(){
     val authController = rememberNavController()
@@ -44,6 +47,7 @@ fun AuthScreen(){
     ) { paddingValues ->
         NavHost(
             navController = authController,
+//            startDestination = if(!isLoggedIn) AuthScreenRoutes.Login.route else AuthScreenRoutes.Dashboard.route,
             startDestination = AuthScreenRoutes.Login.route,
             modifier = Modifier.padding(paddingValues)
         ){

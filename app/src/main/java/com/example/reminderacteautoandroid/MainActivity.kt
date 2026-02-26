@@ -10,10 +10,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.example.reminderacteautoandroid.config.RetrofitClient
+import com.example.reminderacteautoandroid.config.TokenManager
 import com.example.reminderacteautoandroid.screen.AuthScreen
+import com.example.reminderacteautoandroid.screen.AuthScreenRoutes
+import com.example.reminderacteautoandroid.screen.DashboardScreen
 import com.example.reminderacteautoandroid.ui.theme.ReminderActeAutoAndroidTheme
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -35,7 +45,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             ReminderActeAutoAndroidTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
-                    AuthScreen()
+                    var globalNavHostController by remember { mutableStateOf<NavHostController?>(null) }
+                    val context = LocalContext.current
+                    val tokenManager = remember { TokenManager(context) }
+                    val token = tokenManager.getToken()
+                    if (token == null){
+//                        LaunchedEffect(Unit) {globalNavHostController?.navigate(AuthScreenRoutes.Login.route) }
+                        AuthScreen()
+                    } else{
+//                        tokenManager.deleteToken()
+                        DashboardScreen()
+                    }
+
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.example.reminderacteautoandroid.config
 import android.content.Context
 import com.example.reminderacteautoandroid.AuthEvents
 import com.example.reminderacteautoandroid.service.AuthApiService
+import com.example.reminderacteautoandroid.service.VehicleApiService
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -54,5 +55,9 @@ object RetrofitClient{
 
     val authService: AuthApiService by lazy {
         retrofit.create(AuthApiService::class.java)
+    }
+
+    val vehicleService: VehicleApiService by lazy {
+        retrofit.create(VehicleApiService::class.java)
     }
 }
