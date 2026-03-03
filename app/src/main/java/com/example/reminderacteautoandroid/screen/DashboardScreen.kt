@@ -16,10 +16,12 @@ import androidx.navigation.navArgument
 
 sealed class DashboardRoutes(val route: String){
     object MainScreen: DashboardRoutes("vehicles/list")
-    object VehicleScreen: DashboardRoutes("vehicles/{vehicleId}"){
-        fun editVehicleRoute(vehicleId: Long) = "vehicles/$vehicleId"
+    object EditVehicleScreen: DashboardRoutes("vehicles/{userId}/{vehicleId}"){
+        fun editVehicleRoute(userId: Long, vehicleId: Long) = "vehicles/$userId/$vehicleId"
     }
-    object AddVehicleScreen: DashboardRoutes("vehicles/add")
+    object AddVehicleScreen: DashboardRoutes("vehicles/add/{userId}"){
+        fun addVehicleRoute(userId: Long) = "vehicles/add/$userId"
+    }
 
 }
 @RequiresApi(Build.VERSION_CODES.O)
@@ -27,8 +29,11 @@ sealed class DashboardRoutes(val route: String){
 fun DashboardScreen() {
     val dashboardController = rememberNavController()
 
-    val onEditVehicle: (Long) -> Unit = { vehicleId ->
-        dashboardController.navigate(DashboardRoutes.VehicleScreen.editVehicleRoute(vehicleId))
+    val onEditVehicle: (Long, Long) -> Unit = { userId, vehicleId ->
+        dashboardController.navigate(DashboardRoutes.EditVehicleScreen.editVehicleRoute(userId,vehicleId))
+    }
+    val onAddVehicle: (Long) -> Unit = { userId ->
+        dashboardController.navigate(DashboardRoutes.AddVehicleScreen.addVehicleRoute(userId))
     }
     Scaffold { paddingValues ->
         NavHost(
@@ -39,31 +44,48 @@ fun DashboardScreen() {
             composable(DashboardRoutes.MainScreen.route){
                 MainScreen(
                     onEditVehicle = onEditVehicle,
-                    onAddVehicle = {dashboardController.navigate(DashboardRoutes.AddVehicleScreen.route)}
+                    onAddVehicle = onAddVehicle
                 )
             }
 
             composable(
-                DashboardRoutes.VehicleScreen.route,
-                arguments = listOf(navArgument("vehicleId")
-                    { type =
+                DashboardRoutes.EditVehicleScreen.route,
+                arguments = listOf(navArgument("vehicleId"){ type =
                     NavType.LongType
+                },
+                    navArgument("userId"){ type =
+                        NavType.LongType
                     }
+
                 )
             ){ backStackEntry ->
                 val vehicleId = backStackEntry.arguments?.getLong("vehicleId")
-                if(vehicleId != null){
-                    VehicleScreen(
+                val userId = backStackEntry.arguments?.getLong("userId")
+                if(vehicleId != null && userId != null){
+                    EditVehicleScreen(
                         vehicleId = vehicleId,
-                        onBack = {dashboardController.popBackStack()}
+                        userId = userId,
+                        onEditSuccessful = {dashboardController.navigate(DashboardRoutes.MainScreen.route)}
                     )
                 } else {
                     Text("Eroare, vehiculul $vehicleId nu exista!")
                 }
             }
 
-            composable(DashboardRoutes.AddVehicleScreen.route){
-                AddVehicleScreen()
+            composable(DashboardRoutes.AddVehicleScreen.route,
+                arguments = listOf(navArgument("userId"){
+                    type = NavType.LongType
+                })){ backStackEntry ->
+                val userId = backStackEntry.arguments?.getLong("userId")
+                if(userId != null){
+                    AddVehicleScreen(
+                        userId,
+                        onAddSuccess = { dashboardController.navigate(DashboardRoutes.MainScreen.route) }
+                    )
+                } else{
+                    Text("Eroare, userul $userId este invalid!")
+                }
+
             }
         }
     }

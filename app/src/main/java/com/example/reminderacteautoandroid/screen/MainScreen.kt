@@ -53,8 +53,8 @@ sealed class VehicleListState{
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    onEditVehicle: (Long) -> Unit,
-    onAddVehicle: () -> Unit
+    onEditVehicle: (Long, Long) -> Unit,
+    onAddVehicle: (Long) -> Unit
 ) {
     var vehiclesListState by remember {
         mutableStateOf<VehicleListState>(VehicleListState.Loading)
@@ -162,7 +162,7 @@ fun MainScreen(
                         Column (modifier = Modifier.padding(16.dp)){
                             Text("Nicun vehicul inregistrat!")
                             Spacer(modifier = Modifier.height(8.dp))
-                            Button(onClick = onAddVehicle) {
+                            Button(onClick = { onAddVehicle(state.user.id) }) {
                                 Icon(Icons.Default.Add, null)
                                 Spacer(Modifier.width(8.dp))
                                 Text("Adauga autovehicul")
@@ -194,7 +194,7 @@ fun MainScreen(
                                 VehicleCard(
                                     vehicle = vehicle,
                                     onEditClick = {
-                                        onEditVehicle(vehicle.id)
+                                        onEditVehicle(vehicle.userId,vehicle.id)
                                     },
                                     onDeleteClick = {
                                         vehicleToDelete = vehicle.id
@@ -208,7 +208,7 @@ fun MainScreen(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.Center
                         ){
-                            Button(onClick = onAddVehicle) {
+                            Button(onClick = { onAddVehicle(state.user.id) }) {
                                 Icon(Icons.Default.Add, null)
                                 Spacer(Modifier.width(8.dp))
                                 Text("Adauga autovehicul")

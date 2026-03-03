@@ -47,8 +47,8 @@ fun AuthScreen(){
     ) { paddingValues ->
         NavHost(
             navController = authController,
-//            startDestination = if(!isLoggedIn) AuthScreenRoutes.Login.route else AuthScreenRoutes.Dashboard.route,
-            startDestination = AuthScreenRoutes.Login.route,
+            startDestination = if(!isLoggedIn) AuthScreenRoutes.Login.route else AuthScreenRoutes.Dashboard.route,
+            //startDestination = AuthScreenRoutes.Login.route,
             modifier = Modifier.padding(paddingValues)
         ){
             composable(AuthScreenRoutes.Login.route){
@@ -78,10 +78,14 @@ fun AuthScreen(){
             composable(AuthScreenRoutes.Dashboard.route){
                 LaunchedEffect(isLoggedIn) {
                     if(!isLoggedIn){
-                        authController.navigate(AuthScreenRoutes.Login.route)
+                        authController.navigate(AuthScreenRoutes.Login.route){
+                            popUpTo(AuthScreenRoutes.Dashboard.route) { inclusive = true }
+                        }
                     }
                 }
-                DashboardScreen()
+                if (isLoggedIn) {
+                    DashboardScreen()
+                }
             }
 
             composable(AuthScreenRoutes.ForgotPassword.route){
