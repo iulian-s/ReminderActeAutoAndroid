@@ -258,7 +258,8 @@ fun DocumentEntryItem(
                 value = document.type,
                 onValueChange = onTypeChange,
                 label = { Text("Tip Document (ex: RCA, ITP)") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
             )
 
             Spacer(modifier = Modifier.height(8.dp))
