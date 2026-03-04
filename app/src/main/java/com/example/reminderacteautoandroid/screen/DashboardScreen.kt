@@ -71,7 +71,9 @@ fun DashboardScreen(
                     EditVehicleScreen(
                         vehicleId = vehicleId,
                         userId = userId,
-                        onEditSuccessful = {dashboardController.navigate(DashboardRoutes.MainScreen.route)}
+                        onEditSuccessful = {dashboardController.navigate(DashboardRoutes.MainScreen.route){
+                            popUpTo(DashboardRoutes.MainScreen.route) {inclusive = true}
+                        } }
                     )
                 } else {
                     Text("Eroare, vehiculul $vehicleId nu exista!")
@@ -86,7 +88,9 @@ fun DashboardScreen(
                 if(userId != null){
                     AddVehicleScreen(
                         userId,
-                        onAddSuccess = { dashboardController.navigate(DashboardRoutes.MainScreen.route) }
+                        onAddSuccess = { dashboardController.navigate(DashboardRoutes.MainScreen.route){
+                            popUpTo(DashboardRoutes.MainScreen.route) {inclusive = true}
+                        } }
                     )
                 } else{
                     Text("Eroare, userul $userId este invalid!")

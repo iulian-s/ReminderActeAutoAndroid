@@ -92,7 +92,7 @@ fun EditVehicleScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Adauga vehicul") }
+                title = { Text("Editeaza vehicul") }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
