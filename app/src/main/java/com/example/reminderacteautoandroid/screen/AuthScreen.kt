@@ -72,7 +72,10 @@ fun AuthScreen(){
                 RegisterScreen(
                     onBack = { authController.popBackStack() },
                     onRegisterSuccess = {
-                        authController.navigate(AuthScreenRoutes.Login.route)
+                        isLoggedIn = true
+                        authController.navigate(AuthScreenRoutes.Dashboard.route){
+                            popUpTo(AuthScreenRoutes.Login.route) {inclusive = true}
+                        }
                     }
                 )
             }
@@ -90,7 +93,9 @@ fun AuthScreen(){
                         onLogout = {
                             isLoggedIn = false
                             tokenManager.deleteToken()
-                            authController.navigate(AuthScreenRoutes.Login.route)
+                            authController.navigate(AuthScreenRoutes.Login.route){
+                                popUpTo(AuthScreenRoutes.Login.route) {inclusive = true}
+                            }
                         },
                         onAccountDeleted = {
                             isLoggedIn = false

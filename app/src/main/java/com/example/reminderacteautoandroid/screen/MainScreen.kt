@@ -77,7 +77,10 @@ fun MainScreen(
     suspend fun fetchDetails(){
         try{
             val results = RetrofitClient.vehicleService.getVehiclesAndDocuments()
-            vehiclesListState = VehicleListState.Success(results)
+            if(results.code() == 403){
+                onLogout()
+            }
+            vehiclesListState = VehicleListState.Success(results.body()!!)
         } catch (e: Exception){
             println(e.message)
             vehiclesListState = VehicleListState.Error("Eroare ${e.message}")

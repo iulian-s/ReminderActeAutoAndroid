@@ -1,5 +1,6 @@
 package com.example.reminderacteautoandroid.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,10 +35,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.reminderacteautoandroid.config.RetrofitClient
+import com.example.reminderacteautoandroid.config.TokenManager
 import com.example.reminderacteautoandroid.service.AuthApiService
 import kotlinx.coroutines.launch
 
@@ -54,6 +57,8 @@ fun RegisterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var showSecurityWarning by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    val tokenManager = remember { TokenManager(context) }
 
 
     if (showSecurityWarning)
@@ -173,13 +178,23 @@ fun RegisterScreen(
                             email = email,
                             password = password
                         )
-
                         try {
                             val response = RetrofitClient.authService.register(request)
 
                             if(response.isSuccessful){
-                                onRegisterSuccess()
-                                //snackbarHostState.showSnackbar("Bine ai venit, $email!")
+                                try {
+                                    val loginResponse = RetrofitClient.authService.login(request)
+                                    if(loginResponse.isSuccessful){
+                                        loginResponse.body()?.token?.let{ token ->
+                                            tokenManager.saveToken(token)
+                                            onRegisterSuccess()
+                                        }
+                                    }
+                                } catch (e: Exception){
+                                    Toast.makeText(context, "Eroare la inregistrare! - $e", Toast.LENGTH_SHORT).show()
+                                    e.printStackTrace()
+                                }
+
                             }
                             else{
                                 if (response.code() == 409 || response.code() == 400 || response.code() == 403) {

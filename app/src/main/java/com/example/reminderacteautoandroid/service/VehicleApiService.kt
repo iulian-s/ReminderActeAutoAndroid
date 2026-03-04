@@ -46,7 +46,7 @@ interface VehicleApiService {
     )
 
     @GET("/api/vehicles")
-    suspend fun getVehiclesAndDocuments(): UserResponseDTO
+    suspend fun getVehiclesAndDocuments(): Response<UserResponseDTO>
 
     @GET("/api/vehicles/{id}")
     suspend fun getVehicleById(@Path("id") id: Long): Response<VehicleResponseDTO>

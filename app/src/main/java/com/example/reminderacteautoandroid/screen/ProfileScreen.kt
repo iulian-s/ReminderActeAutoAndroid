@@ -40,7 +40,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.reminderacteautoandroid.config.RetrofitClient
 import com.example.reminderacteautoandroid.service.UserApiService
-import com.example.reminderacteautoandroid.service.VehicleApiService
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
