@@ -180,47 +180,48 @@ fun MainScreen(
                         }
 
                     }
-                } else {
-                    Column (
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ){
-                        Row(verticalAlignment = Alignment.CenterVertically){
-                            Text(text = "")
-                            Spacer(modifier = Modifier.weight(0.33f))
-                            Text(
-                                text = "Autovehiculele mele",
-                                style = MaterialTheme.typography.titleLarge,
-                                overflow = TextOverflow.Ellipsis
-                            )
+                }
+                Column (
+                    modifier = Modifier
+                        .fillMaxSize()
+                ){
+                    Row(verticalAlignment = Alignment.CenterVertically){
+                        Text(text = "")
+                        Spacer(modifier = Modifier.weight(0.33f))
+                        Text(
+                            text = "Autovehiculele mele",
+                            style = MaterialTheme.typography.titleLarge,
+                            overflow = TextOverflow.Ellipsis
+                        )
 
-                            Spacer(modifier = Modifier.weight(0.33f))
-                            Box{
-                                IconButton(onClick = { expanded = true }) {
-                                    Icon(Icons.Default.AccountCircle, "Options")
-                                }
-                                DropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    DropdownMenuItem(
-                                        text = {Text("Profil")},
-                                        onClick = {
-                                            expanded = false
-                                            onProfileClick()
-                                        }
-                                    )
-                                    DropdownMenuItem(
-                                        text = {Text("Logout")},
-                                        onClick = {
-                                            expanded = false
-                                            onLogout()
-                                        }
-                                    )
-                                }
+                        Spacer(modifier = Modifier.weight(0.33f))
+                        Box{
+                            IconButton(onClick = { expanded = true }) {
+                                Icon(Icons.Default.AccountCircle, "Options")
                             }
-
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                DropdownMenuItem(
+                                    text = {Text("Profil")},
+                                    onClick = {
+                                        expanded = false
+                                        onProfileClick()
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = {Text("Logout")},
+                                    onClick = {
+                                        expanded = false
+                                        onLogout()
+                                    }
+                                )
+                            }
                         }
+
+                    }
+                    if(!userVehicles.isEmpty()){
 
                         LazyColumn(
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -250,10 +251,11 @@ fun MainScreen(
                                 Text("Adauga autovehicul")
                             }
                         }
-
                     }
 
                 }
+
+
 
             }
         }
