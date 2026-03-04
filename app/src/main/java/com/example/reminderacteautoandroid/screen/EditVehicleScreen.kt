@@ -227,7 +227,6 @@ fun EditVehicleScreen(
 
                                     if (!errorOccurred) {
                                         savingProgress = null
-                                        //snackbarHostState.showSnackbar("Toate documentele au fost salvate!")
                                         onEditSuccessful()
                                     } else {
                                         savingProgress = null

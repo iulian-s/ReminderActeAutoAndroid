@@ -42,12 +42,14 @@ fun AuthScreen(){
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
+
+
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         NavHost(
             navController = authController,
-            startDestination = if(!isLoggedIn) AuthScreenRoutes.Login.route else AuthScreenRoutes.Dashboard.route,
+            startDestination = if(!isLoggedIn || tokenManager.getToken() == null) AuthScreenRoutes.Login.route else AuthScreenRoutes.Dashboard.route,
             //startDestination = AuthScreenRoutes.Login.route,
             modifier = Modifier.padding(paddingValues)
         ){
@@ -84,7 +86,17 @@ fun AuthScreen(){
                     }
                 }
                 if (isLoggedIn) {
-                    DashboardScreen()
+                    DashboardScreen(
+                        onLogout = {
+                            isLoggedIn = false
+                            tokenManager.deleteToken()
+                            authController.navigate(AuthScreenRoutes.Login.route)
+                        },
+                        onAccountDeleted = {
+                            isLoggedIn = false
+                            authController.navigate(AuthScreenRoutes.Login.route)
+                        }
+                    )
                 }
             }
 

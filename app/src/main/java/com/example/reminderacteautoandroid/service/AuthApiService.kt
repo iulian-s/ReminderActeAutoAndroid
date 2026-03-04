@@ -19,6 +19,7 @@ interface AuthApiService {
         val newPassword: String
     )
 
+
     data class AuthResponse(val token: String)
 
     @POST("/api/auth/login")

@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.reminderacteautoandroid.AuthEvents
 import com.example.reminderacteautoandroid.service.AuthApiService
 import com.example.reminderacteautoandroid.service.DocumentApiService
+import com.example.reminderacteautoandroid.service.UserApiService
 import com.example.reminderacteautoandroid.service.VehicleApiService
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -64,5 +65,9 @@ object RetrofitClient{
 
     val documentService: DocumentApiService by lazy {
         retrofit.create(DocumentApiService::class.java)
+    }
+
+    val userService: UserApiService by lazy {
+        retrofit.create(UserApiService::class.java)
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,12 +19,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -37,6 +43,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.reminderacteautoandroid.config.RetrofitClient
 import com.example.reminderacteautoandroid.service.VehicleApiService
@@ -54,7 +61,9 @@ sealed class VehicleListState{
 @Composable
 fun MainScreen(
     onEditVehicle: (Long, Long) -> Unit,
-    onAddVehicle: (Long) -> Unit
+    onAddVehicle: (Long) -> Unit,
+    onProfileClick: () -> Unit,
+    onLogout: () -> Unit
 ) {
     var vehiclesListState by remember {
         mutableStateOf<VehicleListState>(VehicleListState.Loading)
@@ -63,6 +72,7 @@ fun MainScreen(
     var isRefreshing by remember { mutableStateOf(false) }
     var showDeleteWarning by remember { mutableStateOf(false) }
     var vehicleToDelete by remember { mutableStateOf<Long?>(null) }
+    var expanded by remember { mutableStateOf(false) }
 
     suspend fun fetchDetails(){
         try{
@@ -175,17 +185,43 @@ fun MainScreen(
                         modifier = Modifier
                             .fillMaxSize()
                     ){
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 16.dp)
-                        ) {
+                        Row(verticalAlignment = Alignment.CenterVertically){
+                            Text(text = "")
+                            Spacer(modifier = Modifier.weight(0.33f))
                             Text(
                                 text = "Autovehiculele mele",
-                                modifier = Modifier.align(Alignment.Center),
-                                style = MaterialTheme.typography.titleLarge
+                                style = MaterialTheme.typography.titleLarge,
+                                overflow = TextOverflow.Ellipsis
                             )
+
+                            Spacer(modifier = Modifier.weight(0.33f))
+                            Box{
+                                IconButton(onClick = { expanded = true }) {
+                                    Icon(Icons.Default.AccountCircle, "Options")
+                                }
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    DropdownMenuItem(
+                                        text = {Text("Profil")},
+                                        onClick = {
+                                            expanded = false
+                                            onProfileClick()
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = {Text("Logout")},
+                                        onClick = {
+                                            expanded = false
+                                            onLogout()
+                                        }
+                                    )
+                                }
+                            }
+
                         }
+
                         LazyColumn(
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                             verticalArrangement = Arrangement.spacedBy(24.dp)

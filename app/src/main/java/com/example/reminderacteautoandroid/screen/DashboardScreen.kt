@@ -22,11 +22,15 @@ sealed class DashboardRoutes(val route: String){
     object AddVehicleScreen: DashboardRoutes("vehicles/add/{userId}"){
         fun addVehicleRoute(userId: Long) = "vehicles/add/$userId"
     }
+    object ProfileScreen: DashboardRoutes("profile")
 
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(
+    onLogout: () -> Unit,
+    onAccountDeleted: () -> Unit
+) {
     val dashboardController = rememberNavController()
 
     val onEditVehicle: (Long, Long) -> Unit = { userId, vehicleId ->
@@ -44,7 +48,9 @@ fun DashboardScreen() {
             composable(DashboardRoutes.MainScreen.route){
                 MainScreen(
                     onEditVehicle = onEditVehicle,
-                    onAddVehicle = onAddVehicle
+                    onAddVehicle = onAddVehicle,
+                    onProfileClick = {dashboardController.navigate(DashboardRoutes.ProfileScreen.route)},
+                    onLogout = onLogout
                 )
             }
 
@@ -86,6 +92,12 @@ fun DashboardScreen() {
                     Text("Eroare, userul $userId este invalid!")
                 }
 
+            }
+
+            composable(DashboardRoutes.ProfileScreen.route){
+                ProfileScreen(
+                    onAccountDeleted = onAccountDeleted
+                )
             }
         }
     }

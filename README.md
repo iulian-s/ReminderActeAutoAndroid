@@ -1,0 +1,1 @@
+Aplicatie android pentru a tine evidenta actelor auto, primind mail-uri de avertizare.

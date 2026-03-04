@@ -48,19 +48,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ReminderActeAutoAndroidTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
-                    var globalNavHostController by remember { mutableStateOf<NavHostController?>(null) }
-                    val context = LocalContext.current
-                    val tokenManager = remember { TokenManager(context) }
-                    val token = tokenManager.getToken()
-//                    if (token == null){
-////                        LaunchedEffect(Unit) {globalNavHostController?.navigate(AuthScreenRoutes.Login.route) }
-//                        AuthScreen()
-//                    } else{
-////                        tokenManager.deleteToken()
-//                        DashboardScreen()
-//                    }
                     AuthScreen()
-
                 }
             }
         }
